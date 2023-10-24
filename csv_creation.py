@@ -11,8 +11,8 @@ FOLDER_PATH = constants.FOLDER_PATH
 
 def folder_walk():
     try:
-        file_path = os.path.join(os.get_cwd(), FILE_TO_EXTRACT_FROM_PATH)
-        folder_path = os.path.join(os.get_cwd(), FOLDER_PATH)
+        file_path = os.path.join(os.getcwd(), FILE_TO_EXTRACT_FROM_PATH)
+        folder_path = os.path.join(os.getcwd(), FOLDER_PATH)
         folder_original_path = extract_folder(file_path=file_path, folder_path=folder_path)
         return folder_original_path
     except Exception as e:
@@ -23,7 +23,7 @@ def folder_walk():
 def root_folder():
     try:
         path = folder_walk()
-        root_folder = os.path.join(os.get_cwd(), path)
+        root_folder = os.path.join(os.getcwd(), path)
         return root_folder
     except Exception as e:
         logging.info("Error Occured Inside root folder file")
@@ -43,3 +43,9 @@ def process_csv_files(subfolder):
     except Exception as e:
         logging.info("Error has occured in process_csv_files function")
         raise CustomException(e, sys)
+    
+folder_original_path = folder_walk()
+for subfolder in os.listdir(folder_original_path):
+    subfolder_path = os.path.join(folder_original_path, subfolder)
+    if os.path.isdir(subfolder_path):
+        process_csv_files(subfolder)
