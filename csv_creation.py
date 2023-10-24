@@ -22,8 +22,7 @@ def folder_walk():
 
 def root_folder():
     try:
-        path = folder_walk()
-        root_folder = os.path.join(os.get_cwd(), path)
+        root_folder = folder_walk()
         return root_folder
     except Exception as e:
         logging.info("Error Occured Inside root folder file")
