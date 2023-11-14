@@ -11,7 +11,7 @@ def extract_folder(file_path:str, folder_path=None):
                 zObject.extractall(folder_path)
             else:
                 zObject.extract()
-            return folder_path if folder_path else os.get_cwd()
+            return folder_path if folder_path else os.getcwd()
     except Exception as e:
         logging.info("An error has occured")
         raise CustomException(e, sys)
