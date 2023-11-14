@@ -4,10 +4,15 @@ from src.exception import CustomException
 from src.logger import logging
 from src.constants import constants
 import pandas as pd
+import shutil
 
 
 FILE_TO_EXTRACT_FROM_PATH= constants.FILE_TO_EXTRACT_PATH
 FOLDER_PATH = constants.FOLDER_PATH
+column_names = ["time", "avg_rss12", "var_rss12", "avg_rss13", "var_rss13", "avg_rss23", "var_rss23"]
+columns_len = 5
+# Define the path to your replacement line (if needed)
+replacement_line_path = "replacement_line.txt"
 
 def folder_walk():
     try:
@@ -20,31 +25,38 @@ def folder_walk():
         raise CustomException(e, sys)
     
 
-def root_folder():
+"""def root_folder():
     try:
         root_folder = folder_walk()
         return root_folder
     except Exception as e:
         logging.info("Error Occured Inside root folder file")
-        raise CustomException(e, sys)
-    
+        raise CustomException(e, sys)"""
+
+
+
 def process_csv_files(subfolder):
     try:
-        root_path = root_folder()
-        sub_folder_path = os.path.join(root_path, subfolder)
-        for filename in os.listdir(sub_folder_path):
-            if filename.endswith('.csv'):
-                file_path = os.path.join(sub_folder_path, filename)
-                #Read the CSV file path
-                df = pd.read_csv(file_path)
-                df["Label"] = subfolder
-                df.to_csv(file_path, index=False)
+        root_path = folder_walk()
+        dataframes = []
+        #sub_folder_path = os.path.join(root_path, subfolder)
+        for root, dir, files in os.walk(root_path):
+            
+            for file in files:
+                
+                if file.endswith(".csv"):
+                    folder_name = os.path.basename(root)
+                    #print(folder_name)
+                    file_path = os.path.join(root, file)
+                    df = pd.read_csv(f"{file_path}", on_bad_lines='skip', skiprows=5, names= column_names)
+                    df["Label"] = folder_name
+                    dataframes.append(df)
+        return dataframes
     except Exception as e:
         logging.info("Error has occured in process_csv_files function")
         raise CustomException(e, sys)
     
-folder_original_path = folder_walk()
-for subfolder in os.listdir(folder_original_path):
-    subfolder_path = os.path.join(folder_original_path, subfolder)
-    if os.path.isdir(subfolder_path):
-        process_csv_files(subfolder)
+
+
+
+
