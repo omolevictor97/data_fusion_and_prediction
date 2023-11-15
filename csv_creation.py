@@ -46,6 +46,7 @@ def process_csv_files(subfolder):
                 
                 if file.endswith(".csv"):
                     folder_name = os.path.basename(root)
+
                     #print(folder_name)
                     file_path = os.path.join(root, file)
                     df = pd.read_csv(f"{file_path}", on_bad_lines='skip', skiprows=5, names= column_names)
