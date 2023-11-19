@@ -6,3 +6,4 @@ flask
 seaborn
 plotly-express
 imblearn
+catboost
